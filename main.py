@@ -1,29 +1,6 @@
 import os
 from time import sleep
-
-# Assign `input` to `raw_input` because we are re-using its name 
-raw_input = input
-
-# Handle input
-def input(placeholder: str = ""):
-    while True:
-        try:
-            n = raw_input(placeholder)
-            break
-        except:
-            print(
-            """
-            You are trying to exit the game...
-            Press Ctrl-c again to exit
-            Or wait 3 seconds to continue.
-            """
-            )
-            sleep(3)
-            print("Continuing...")
-    return n
-
-def clear():
-    os.system('clear')
+from utils import input, clear
 
 def newGame():
     pass
