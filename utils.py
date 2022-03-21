@@ -83,7 +83,7 @@ class Game:
                 deck.stand()
 
             if deck.checkIfBusted():
-                print("Busted")
+                print("Bot busted!")
 
         self.botsDeck = deck
 
