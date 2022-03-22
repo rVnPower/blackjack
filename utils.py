@@ -1,6 +1,6 @@
 from random import shuffle
 from time import sleep
-
+import os 
 # Assign `input` to `raw_input` because we are re-using its name 
 raw_input = input
 
@@ -38,6 +38,7 @@ class Game:
         '''
         ### Initialization
         # Creating decks
+        clear()
         self.playersDeck, self.botsDeck = Deck(), Deck()
         self.cardsPile = Deck()
         self.cardsPile.fill()
@@ -50,39 +51,53 @@ class Game:
         self.playersDeck.calculate()
         self.botsDeck.calculate()
 
-        while not (self.playersDeck.standed or self.playersDeck.busted):
-            print(f"You now have {self.playersDeck.points}")
-            print(" ".join(self.playersDeck.getRawCards()))
+        print(f"You have {self.playersDeck.points}")
+        print(" ".join(self.playersDeck.getRawCards()))
+        if self.playersDeck.won:
+            print("You got a blackjack!")
+
+        while not (self.playersDeck.standed or self.playersDeck.busted or self.playersDeck.won):
             self.handlePlayer()
 
+        print("_______________________________________________________________________________")
+
         self.handleBot()
+        print(self.checkWon())
 
     def handlePlayer(self):
         inputs = input("(deal/stand): ").strip().lower()
 
-        if inputs in ["deal", "hit"]:
+        if inputs in ["deal", "hit", "1"]:
             self.playersDeck.deal(self.cardsPile)
             self.playersDeck.calculate()
-        elif inputs in ["stand"]:
+        elif inputs in ["stand", "2"]:
             self.playersDeck.stand()
 
+        print(f"You now have {self.playersDeck.points}")
+        print(" ".join(self.playersDeck.getRawCards()))
+
         if self.playersDeck.checkIfBusted():
-            print("Busted!")
+            print("You busted!")
+            
 
     def handleBot(self):
         deck = self.botsDeck
+        print(f"Bot has {deck.points}")
+        print(" ".join(deck.getRawCards()))
+        if deck.won:
+            print("Bot got a blackjack!")
 
         if self.playersDeck.busted:
             deck.stand()
+            print("Bot standed!")
 
-        while not (deck.standed or deck.busted):
-            print(f"Bot has {deck.points}")
-            print(" ".join(deck.getRawCards()))
+        while not (deck.standed or deck.busted or deck.won):
 
             if deck.points < 17:
                 deck.deal(self.cardsPile)
                 self.botsDeck.calculate()
-                print(f"Bot dealed. Bot now has {deck.points}")
+                print(f"Bot has {deck.points}")
+                print(" ".join(deck.getRawCards()))
             else:
                 deck.stand()
 
@@ -91,11 +106,18 @@ class Game:
 
         self.botsDeck = deck
 
-    def checkIfWon(self):
+    def checkWon(self):
         '''
-        Check if anybody won
+        Check who won
         '''
-        pass
+        bot = self.botsDeck
+        player = self.playersDeck
+        if bot.points == player.points or (bot.busted and player.busted) or (bot.won and player.won):
+            return "It's a tie!"
+        elif (player.points > bot.points or bot.busted or player.won) and not player.busted:
+            return "Player won!"
+        elif (player.points < bot.points or player.busted or bot.won) and not bot.busted:
+            return "Bot won!"
 
 # Card class represent a card
 class Card:
@@ -119,6 +141,7 @@ class Deck:
         self.cards = []
         self.standed = False
         self.busted = False
+        self.won = False
         self.points = 0
 
     def fill(self):
@@ -162,6 +185,15 @@ class Deck:
 
         return self.busted
 
+    def checkIfBlackjack(self):
+        if 2 > self.cards.count("A") > 0 and (
+            self.cards.count("10") > 0
+            or self.cards.count("J") > 0
+            or self.cards.count("Q") > 0
+            or self.cards.count("K") > 0
+        ):
+            self.won = True
+
 
     def deal(self, pile):
         '''
@@ -203,6 +235,8 @@ class Deck:
                 ace.points = 1
             calculated_points += ace.points
 
+        self.checkIfBlackjack()
+
         self.points = calculated_points
 
     def reset(self):
@@ -213,6 +247,7 @@ class Deck:
         self.points = 0
         self.standed = False
         self.busted = False
+        self.won = False
 
     def debug(self):
         '''
@@ -221,6 +256,3 @@ class Deck:
         print(self.cards)
         print(self.filled)
         print(self.points)
-
-a = Game()
-a.start()

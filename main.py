@@ -1,12 +1,21 @@
 import os
 from time import sleep
-from utils import input, clear
+from utils import input, clear, Game
+
 
 def newGame():
-    pass
+    while True:
+        game = Game()
+        game.start()
+        a = input("Do you want to play again?\n(y/n):").strip().lower()
+        if a == "y":
+            del game
+        else:
+            break
 
 # Main menu
 def main():
+    clear()
     print(
     """
     Hello and welcome to Blackjack!
@@ -19,12 +28,13 @@ def main():
     if player_input == 1:
         newGame()
     elif player_input == 2:
-        clear()
-        print("See you next time...")
-        sleep(2)
+        return 
 
 
 # Initialization
 if __name__ == "__main__":
     main()
+    clear()
+    print("See you next time...")
+    sleep(2)
     clear()
