@@ -47,6 +47,8 @@ class Game:
         for times in range(2):
             self.playersDeck.deal(self.cardsPile)
             self.botsDeck.deal(self.cardsPile)
+        self.playersDeck.calculate()
+        self.botsDeck.calculate()
 
         while not (self.playersDeck.standed or self.playersDeck.busted):
             print(f"You now have {self.playersDeck.points}")
@@ -60,6 +62,7 @@ class Game:
 
         if inputs in ["deal", "hit"]:
             self.playersDeck.deal(self.cardsPile)
+            self.playersDeck.calculate()
         elif inputs in ["stand"]:
             self.playersDeck.stand()
 
@@ -78,6 +81,7 @@ class Game:
 
             if deck.points < 17:
                 deck.deal(self.cardsPile)
+                self.botsDeck.calculate()
                 print(f"Bot dealed. Bot now has {deck.points}")
             else:
                 deck.stand()
@@ -126,7 +130,9 @@ class Deck:
 
         for number in range(1, 13+1):
             card_index = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'][number-1]
-            card_points = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10][number-1]
+            card_points = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10][number-1]
+            # Aces got 11 points by default, may change in `calculate` function below.
+
             for suit in ['♠', '♦', '♣', '♥']:
                 card = Card(suit, card_index, card_points)
                 self.cards.append(card)
@@ -163,7 +169,6 @@ class Deck:
         '''
         popped_card = pile.pop()
         self.cards.append(popped_card)
-        self.points += popped_card.getPoints()
 
     def stand(self):
         '''
@@ -183,6 +188,22 @@ class Deck:
         Shuffle the deck randomly
         '''
         shuffle(self.cards)
+
+    def calculate(self):
+        aces = []
+        calculated_points = 0
+        for card in self.cards:
+            if card.index == "A" and card.getPoints() == 11:
+                aces.append(card)
+                continue
+            calculated_points += card.getPoints()
+
+        for ace in aces:
+            if 11 + calculated_points > 21:
+                ace.points = 1
+            calculated_points += ace.points
+
+        self.points = calculated_points
 
     def reset(self):
         '''
