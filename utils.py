@@ -1,3 +1,8 @@
+### Blackjack by VnPower
+# This repository is distributed under MIT license.
+# 
+# You will be free to copy and/or redistribute this code, with or without credits.
+
 from random import shuffle
 from time import sleep
 import os 

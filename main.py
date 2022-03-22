@@ -1,3 +1,8 @@
+### Blackjack by VnPower
+# This repository is distributed under MIT license.
+# 
+# You will be free to copy and/or redistribute this code, with or without credits.
+
 import os
 from time import sleep
 from utils import input, clear, Game
