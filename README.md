@@ -1,13 +1,13 @@
-<h2 align="center">
+<h1 align="center">
 Blackjack
-</h2>
+</h1>
 
-#### Preface
+## Preface
 This is my code for the blackjack game written in Python, soon there will be a version in Rust.
 
 For people who wants to know more about blackjack, there is a good Wikipedia page (in English) about blackjack: https://en.wikipedia.org/wiki/Blackjack
 
-#### Cloning or contributing
+## Copying or contributing
 This repository is distributed under MIT license.
 
 You will be free to copy and/or redistribute this code, with or without credits.
