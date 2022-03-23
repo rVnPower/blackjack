@@ -117,11 +117,18 @@ class Game:
         '''
         bot = self.botsDeck
         player = self.playersDeck
-        if bot.points == player.points or (bot.busted and player.busted) or (bot.won and player.won):
+        if (bot.points == player.points or (bot.busted and player.busted) or (bot.won and player.won)) and not (bot.won or player.won):
             return "It's a tie!"
-        elif (player.points > bot.points or bot.busted or player.won) and not player.busted:
+
+        # Explicit check here because player got the priority to win
+        if player.won:
             return "Player won!"
-        elif (player.points < bot.points or player.busted or bot.won) and not bot.busted:
+        elif bot.won:
+            return "Bot won!"
+
+        elif (player.points > bot.points or bot.busted) and not player.busted:
+            return "Player won!"
+        elif (player.points < bot.points or player.busted) and not bot.busted:
             return "Bot won!"
 
 # Card class represent a card
