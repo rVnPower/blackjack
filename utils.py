@@ -191,11 +191,15 @@ class Deck:
         return self.busted
 
     def checkIfBlackjack(self):
-        if 2 > self.cards.count("A") > 0 and (
-            self.cards.count("10") > 0
-            or self.cards.count("J") > 0
-            or self.cards.count("Q") > 0
-            or self.cards.count("K") > 0
+        '''
+        Check if blackjack
+        '''
+        string = "".join(self.getRawCards())
+        if 2 > string.count("A") > 0 and (
+            string.count("10") > 0
+            or string.count("J") > 0
+            or string.count("Q") > 0
+            or string.count("K") > 0
         ):
             self.won = True
 
@@ -213,13 +217,6 @@ class Deck:
         '''
         self.standed = True
 
-    def flush(self):
-        '''
-        Remove all cards in deck
-        '''
-        self.cards = []
-        self.filled = False
-
     def shuffle(self):
         '''
         Shuffle the deck randomly
@@ -227,6 +224,9 @@ class Deck:
         shuffle(self.cards)
 
     def calculate(self):
+        '''
+        Calculate the points and check for blackjack
+        '''
         aces = []
         calculated_points = 0
         for card in self.cards:
@@ -248,7 +248,7 @@ class Deck:
         '''
         Return all values to default
         '''
-        self.cards.flush()
+        self.cards = []
         self.points = 0
         self.standed = False
         self.busted = False
@@ -259,5 +259,9 @@ class Deck:
         Print all class properties (not meant to be user-friendly)
         '''
         print(self.cards)
-        print(self.filled)
+        print(self.standed, self.busted, self.won)
         print(self.points)
+
+if __name__ == "__main__":
+    # Your debug code here....
+    pass
